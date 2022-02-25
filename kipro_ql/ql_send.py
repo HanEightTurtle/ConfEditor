@@ -3,7 +3,6 @@
 from .myfunc import get_toml
 from .util_ql import *
 from .ql_sample import get_conf
-from random import randint
 
 def ql_send(path='ql/qlconf.toml'):
     conf = get_conf()
