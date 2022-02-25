@@ -9,7 +9,9 @@ def ql_send(path='ql/qlconf.toml'):
     qlconfs = get_toml(path=path).get('青龙')
     for qlconf in qlconfs:
         for key in qlconf.keys():
-            exec(f'{key} = "{qlconf.get(key)}"')
+            qlurl = qlconf.get('qlurl')
+            qlid = qlconf.get('qlid')
+            qlsecret = qlconf.get('qlsecret')
         token = ql_ini(qlurl,qlid,qlsecret)
         envs = ql_envs(qlurl,token)
         msg = []
