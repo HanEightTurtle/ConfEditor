@@ -20,7 +20,7 @@ def check_ck():
                 pd = True
                 break
     if pd:
-        p = subprocess.Popen('task /ql/scripts/gys619_jdd_main_wskey.py',
+        p = subprocess.Popen(f'task /ql/scripts/{repo}/wskey.py',
                             shell=True,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT,
