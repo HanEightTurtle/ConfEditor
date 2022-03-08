@@ -26,7 +26,7 @@ def check_ck():
                             stderr=subprocess.STDOUT,
                             encoding='utf-8'
                             )
-        a = p.communicate()[0]
+        print(p.communicate()[0])
         msg = 'cookie失效，已更新'
     else:
         msg = 'cookie有效'
