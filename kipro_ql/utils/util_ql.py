@@ -16,7 +16,7 @@ def ql_ini(qlurl,qlid,qlsecret):
 def ql_get_user_envs(qlurl,token,username):
     '''
         remarks = {app}: {username}
-        env = {'value':xxx,'name':xxx,'status':x,'_id':xxx}
+        env = {'value':xxx,'name':xxx,'status':x,'id':xxx}
     '''
     # envs
     url = f'{qlurl}/open/envs?t={int(time.time())}'
@@ -27,7 +27,7 @@ def ql_get_user_envs(qlurl,token,username):
 
 def ql_envs(qlurl,token):
     '''
-        env = {'value':xxx,'name':xxx,'status':x,'_id':xxx}
+        env = {'value':xxx,'name':xxx,'status':x,'id':xxx}
     '''
     # envs
     url = f'{qlurl}/open/envs?t={int(time.time())}'
@@ -52,12 +52,12 @@ def ql_add(qlurl,token,name,value,remarks):
     r = requests.post(url=url,headers=headers,data=json.dumps(body))
     return r.text
 
-def ql_update(qlurl,token,name,value,remarks,_id):
+def ql_update(qlurl,token,name,value,remarks,id):
     reqData = {
         'name':name,
         'value':value,
         'remarks':remarks,
-        '_id':_id,
+        'id':id,
     }
     url = f'{qlurl}/open/envs?t={int(time.time())}'
     headers = {
@@ -67,30 +67,31 @@ def ql_update(qlurl,token,name,value,remarks,_id):
     }
     body = reqData
     r = requests.put(url=url,headers=headers,data=json.dumps(body))
+    print(r.text)
     return r.text
 
-def ql_delete(qlurl,token,_id):
+def ql_delete(qlurl,token,id):
     url = f'{qlurl}/open/envs?t={int(time.time())}'
     headers = {
         'Accept': 'application/json',
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json;charset=UTF-8'
     }
-    body = [_id]
+    body = [id]
     r = requests.delete(url=url,headers=headers,data=json.dumps(body))
     return r.text
 
 def send2ql(qlurl,token,envs,name,value,app):
     if value:
         if env_app:=[item for item in envs if item.get('name')==name]:
-            _id = env_app[0].get('_id')
-            ql_update(qlurl,token,name,value,app,_id)
-            return app+' updated'
+            id = env_app[0].get('id')
+            r = ql_update(qlurl,token,name,value,app,id)
+            return [r,app+' updated']
         else:
             r = ql_add(qlurl,token,name,value,app)
-            return app+' added'
+            return [r,app+' added']
     else:
         if env_app:=[item for item in envs if item.get('name')==name]:
-            _id = env_app[0].get('_id')
-            ql_delete(qlurl,token,_id)
-            return app+' deleted'
+            id = env_app[0].get('id')
+            r = ql_delete(qlurl,token,id)
+            return [r,app+' deleted']
